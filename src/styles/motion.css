@@ -1,0 +1,172 @@
+/* ------------------------------------------------------------------
+   Reveal-on-scroll (plays once).
+   Hidden states apply only under html.reveal-ready, set by an inline
+   head script and removed after 2.5s unless the observer goes live.
+   ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  html.reveal-ready [data-reveal="up"]:not(.is-in) {
+    opacity: 0;
+    transform: translate3d(0, var(--dist-md), 0);
+  }
+  html.reveal-ready [data-reveal="fade"]:not(.is-in) {
+    opacity: 0;
+  }
+  /* Horizon line: draws outward from its left edge */
+  html.reveal-ready [data-reveal="line"]:not(.is-in) {
+    transform: scaleX(0);
+  }
+  /* Signature: media opens from a horizon line through its middle.
+     The clip sits on the child so the observed parent still intersects. */
+  html.reveal-ready [data-reveal="horizon"]:not(.is-in) > .reveal-media {
+    clip-path: inset(50% 0 50% 0);
+  }
+  html.reveal-ready [data-reveal="horizon"]:not(.is-in) > .reveal-media img {
+    transform: scale(1.12);
+  }
+
+  [data-reveal="up"],
+  [data-reveal="fade"] {
+    transition:
+      opacity var(--dur-slow) var(--ease-out),
+      transform var(--dur-slow) var(--ease-emphasized);
+    transition-delay: calc(var(--i, 0) * var(--stagger));
+  }
+  [data-reveal="line"] {
+    transform-origin: left center;
+    transition: transform var(--dur-deliberate) var(--ease-emphasized);
+    transition-delay: calc(var(--i, 0) * var(--stagger));
+  }
+  [data-reveal="horizon"] > .reveal-media {
+    transition: clip-path var(--dur-deliberate) var(--ease-emphasized);
+    transition-delay: calc(var(--i, 0) * var(--stagger));
+  }
+  [data-reveal="horizon"] > .reveal-media img {
+    transition: transform 1000ms var(--ease-emphasized);
+    transition-delay: calc(var(--i, 0) * var(--stagger));
+  }
+}
+
+/* ------------------------------------------------------------------
+   Home hero load sequence: horizon draws → image opens from it →
+   headline words rise → copy and actions settle. Done by ~1.3s.
+   ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-horizon {
+    animation: horizon-draw var(--dur-deliberate) var(--ease-emphasized) both;
+  }
+  .hero-media {
+    animation: horizon-open 1000ms var(--ease-emphasized) 180ms both;
+  }
+  .hero-media img {
+    animation: settle-scale 1000ms var(--ease-emphasized) 180ms both;
+  }
+  .hero-word > span {
+    animation: word-rise 700ms var(--ease-emphasized) both;
+    animation-delay: calc(300ms + var(--i, 0) * 45ms);
+  }
+  .hero-after {
+    animation: fade-rise var(--dur-slow) var(--ease-out) both;
+    animation-delay: calc(640ms + var(--i, 0) * 80ms);
+  }
+
+  /* Decorative parallax on the hero photo, scrubbed by page scroll */
+  @supports (animation-timeline: scroll()) {
+    .hero-parallax {
+      animation: hero-drift linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100svh;
+    }
+  }
+}
+
+.hero-word {
+  display: inline-block;
+  overflow: clip;
+  overflow-clip-margin: 0.12em;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+  vertical-align: top;
+}
+.hero-word > span {
+  display: inline-block;
+}
+
+@keyframes horizon-draw {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes horizon-open {
+  from { clip-path: inset(50% 0 50% 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@keyframes settle-scale {
+  from { transform: scale(1.14); }
+  to { transform: scale(1); }
+}
+@keyframes word-rise {
+  from { transform: translate3d(0, 105%, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+@keyframes fade-rise {
+  from { opacity: 0.01; transform: translate3d(0, var(--dist-md), 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes hero-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(0, 8%, 0); }
+}
+
+/* ------------------------------------------------------------------
+   Route transitions (React <ViewTransition>)
+   ------------------------------------------------------------------ */
+::view-transition {
+  pointer-events: none;
+}
+::view-transition-old(.page-exit) {
+  animation: var(--dur-fast) var(--ease-exit) both vt-fade-out;
+}
+::view-transition-new(.page-enter) {
+  animation:
+    var(--dur-slow) var(--ease-out) 120ms both vt-fade-in,
+    var(--dur-slow) var(--ease-emphasized) 120ms both vt-rise;
+}
+::view-transition-group(.morph) {
+  animation-duration: var(--dur-slow);
+  animation-timing-function: var(--ease-in-out);
+}
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+@keyframes vt-fade-out {
+  to { opacity: 0; }
+}
+@keyframes vt-fade-in {
+  from { opacity: 0; }
+}
+@keyframes vt-rise {
+  from { transform: translate3d(0, 24px, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
+/* Smooth in-page anchors, only when motion is welcome */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}

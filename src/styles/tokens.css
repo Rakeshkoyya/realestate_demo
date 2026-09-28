@@ -1,0 +1,80 @@
+/* Sahra Estates — design tokens.
+   Colour world: limestone, basalt, Gulf water, desert sand at dusk. */
+:root {
+  /* Colour roles */
+  --color-bg: #f3f2ee;          /* limestone */
+  --color-surface: #e9e7e1;     /* shaded limestone */
+  --color-ink: #161817;         /* basalt */
+  --color-ink-muted: #5a5f5c;
+  --color-line: #d4d1c9;
+  --color-line-strong: #b9b5ab;
+  --color-accent: #1f4d48;      /* Gulf water */
+  --color-accent-hover: #173c38;
+  --color-on-accent: #f3f2ee;
+  --color-dark: #121413;
+  --color-on-dark: #eceae4;
+  --color-on-dark-muted: #9da19d;
+  --color-line-dark: #2b2f2d;
+  --color-sand: #c9a878;        /* the horizon line, on dark imagery only */
+  --color-error: #9b2c1f;
+  --color-focus: #1f4d48;
+
+  /* Type */
+  --font-display: var(--font-instrument), "Times New Roman", serif;
+  --font-body: var(--font-hanken), system-ui, sans-serif;
+  --text-display: clamp(3rem, 1.9rem + 5vw, 7rem);
+  --text-h1: clamp(2.5rem, 1.7rem + 3.6vw, 5rem);
+  --text-h2: clamp(2rem, 1.5rem + 2.2vw, 3.5rem);
+  --text-h3: clamp(1.5rem, 1.3rem + 0.8vw, 2rem);
+  --text-lead: clamp(1.125rem, 1.02rem + 0.45vw, 1.375rem);
+  --text-body: 1rem;
+  --text-small: 0.875rem;
+  --text-label: 0.8125rem;
+  --leading-tight: 1.02;
+  --leading-snug: 1.2;
+  --leading-body: 1.6;
+
+  /* Space */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-section: clamp(5rem, 3rem + 7vw, 10rem);
+  --gutter: clamp(1.25rem, 0.6rem + 2.8vw, 3rem);
+  --container: 88rem;
+  --header-h: 4.5rem;
+
+  /* Shape */
+  --radius-media: 3px;
+  --radius-control: 999px;
+  --shadow-float: 0 1px 2px rgb(22 24 23 / 0.06), 0 12px 32px -12px rgb(22 24 23 / 0.18);
+
+  /* Motion — calm register: slower, emphasised entrances, no spring */
+  --dur-instant: 110ms;
+  --dur-fast: 180ms;
+  --dur-base: 320ms;
+  --dur-slow: 560ms;
+  --dur-deliberate: 900ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --dist-sm: 8px;
+  --dist-md: 20px;
+  --dist-lg: 32px;
+  --stagger: 70ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dist-sm: 0px;
+    --dist-md: 0px;
+    --dist-lg: 0px;
+    --stagger: 0ms;
+  }
+}
